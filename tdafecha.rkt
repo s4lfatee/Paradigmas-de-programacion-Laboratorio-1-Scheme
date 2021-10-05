@@ -92,3 +92,6 @@
       )
   )
 
+
+
+(define fecha1 (crearfecha 20 03 2021))
