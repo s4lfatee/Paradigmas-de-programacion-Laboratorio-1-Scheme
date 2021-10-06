@@ -95,3 +95,4 @@
 
 
 (define fecha1 (crearfecha 20 03 2021))
+(setdia fecha1 19)

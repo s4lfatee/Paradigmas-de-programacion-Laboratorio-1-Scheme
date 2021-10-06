@@ -11,7 +11,7 @@
 ;Recursión: No
 
 (define (crearusuario nombreusuario contrasenha docscreados docscompartidos docsaccesibles)
-  list (nombreusuario contrasenha docscreados docscompartidos docsaccesibles))
+  (list nombreusuario contrasenha docscreados docscompartidos docsaccesibles))
 
 ;Nivel 2: Pertenencia
 ;La única forma disponible por ahora para verificar el tda, es a través de su largo de lista, posiblemente después tenga otra solución al respecto
@@ -19,7 +19,8 @@
 ;Recorrido: Valor Booleano
 
 (define (isusuario? usuario)
-  (if (= (length (usuario)) 5)
+  (if (and (= (length usuario) 5)
+           (list? usuario))
       #t
       #f
       )
@@ -74,12 +75,11 @@
   (if (isusuario? usuario)
       (crearusuario nuevonombre (getcontrasenha usuario) (getdocscreados usuario) (getdocscompartidos usuario) (getdocsaccesibles usuario))
       usuario)
-  null
   )
 
 (define (setcontrasenha usuario nuevacontrasenha)
   (if (isusuario? usuario)
       (crearusuario (getnombre usuario) nuevacontrasenha (getdocscreados usuario) (getdocscompartidos usuario) (getdocsaccesibles usuario))
       usuario)
-  null
   )
+
