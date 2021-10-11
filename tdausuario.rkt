@@ -10,8 +10,8 @@
 ;Recorrido: Lista
 ;Recursión: No
 
-(define (crearusuario nombreusuario contrasenha docscreados docscompartidos docsaccesibles)
-  (list nombreusuario contrasenha docscreados docscompartidos docsaccesibles))
+(define (crearusuario nombreusuario contrasenha docscreados docscompartidos docsaccesibles estado)
+  (list nombreusuario contrasenha docscreados docscompartidos docsaccesibles estado))
 
 ;Nivel 2: Pertenencia
 ;La única forma disponible por ahora para verificar el tda, es a través de su largo de lista, posiblemente después tenga otra solución al respecto
@@ -19,7 +19,7 @@
 ;Recorrido: Valor Booleano
 
 (define (isusuario? usuario)
-  (if (and (= (length usuario) 5)
+  (if (and (= (length usuario) 6)
            (list? usuario))
       #t
       #f
@@ -66,6 +66,13 @@
       )
   )
 
+(define (getestado usuario)
+  (if (isusuario? usuario)
+      (car (cdr (cdr (cdr (cdr (cdr usuario))))))
+      null
+      )
+  )
+
 ;Nivel 4: Modificadores
 ;Funciones que modificarán los elementos de la lista dependiendo de la función
 ;Dominio: Lista
@@ -83,3 +90,11 @@
       usuario)
   )
 
+;Nivel 5: Operaciones
+
+(define (isconectado? usuario)
+  (if (string=? (getestado usuario) "conectado")
+      #t
+      #f
+      )
+  )
