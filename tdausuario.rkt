@@ -10,8 +10,9 @@
 ;Recorrido: Lista
 ;Recursión: No
 
-(define (crearusuario nombreusuario contrasenha docscreados docscompartidos docsaccesibles estado)
-  (list nombreusuario contrasenha docscreados docscompartidos docsaccesibles estado))
+(define (user nombreusuario contrasenha date)
+  (list nombreusuario contrasenha date)
+  )
 
 ;Nivel 2: Pertenencia
 ;La única forma disponible por ahora para verificar el tda, es a través de su largo de lista, posiblemente después tenga otra solución al respecto
@@ -19,7 +20,7 @@
 ;Recorrido: Valor Booleano
 
 (define (isusuario? usuario)
-  (if (and (= (length usuario) 6)
+  (if (and (= (length usuario) 3)
            (list? usuario))
       #t
       #f
@@ -45,30 +46,9 @@
       )
   )
 
-(define (getdocscreados usuario)
+(define (getdate usuario)
   (if (isusuario? usuario)
       (car (cdr (cdr usuario)))
-      null
-      )
-  )
-
-(define (getdocscompartidos usuario)
-  (if (isusuario? usuario)
-      (car (cdr (cdr (cdr usuario))))
-      null
-      )
-  )
-
-(define (getdocsaccesibles usuario)
-  (if (isusuario? usuario)
-      (car (cdr (cdr (cdr (cdr usuario)))))
-      null
-      )
-  )
-
-(define (getestado usuario)
-  (if (isusuario? usuario)
-      (car (cdr (cdr (cdr (cdr (cdr usuario))))))
       null
       )
   )
@@ -80,21 +60,15 @@
 
 (define (setnombreusuario usuario nuevonombre)
   (if (isusuario? usuario)
-      (crearusuario nuevonombre (getcontrasenha usuario) (getdocscreados usuario) (getdocscompartidos usuario) (getdocsaccesibles usuario))
+      (user nuevonombre (getcontrasenha usuario) (getdate usuario))
       usuario)
   )
 
 (define (setcontrasenha usuario nuevacontrasenha)
   (if (isusuario? usuario)
-      (crearusuario (getnombre usuario) nuevacontrasenha (getdocscreados usuario) (getdocscompartidos usuario) (getdocsaccesibles usuario))
+      (user (getnombre usuario) nuevacontrasenha (getdate usuario))
       usuario)
   )
 
-;Nivel 5: Operaciones
 
-(define (isconectado? usuario)
-  (if (string=? (getestado usuario) "conectado")
-      #t
-      #f
-      )
-  )
+(provide (all-defined-out))

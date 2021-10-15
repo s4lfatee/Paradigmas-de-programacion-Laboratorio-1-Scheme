@@ -10,7 +10,7 @@
 ;Recorrido: Lista
 ;Recursión: No
 
-(define (crearfecha dia mes anho)
+(define (date dia mes anho)
   (list dia mes anho)
   )
 
@@ -66,7 +66,7 @@
       (if (and (>= newdia 1)
                (<= newdia 31) 
                )
-          (crearfecha newdia (getmes fecha) (getanho fecha))
+          (date newdia (getmes fecha) (getanho fecha))
           fecha)
       null
       )
@@ -77,7 +77,7 @@
       (if (and (>= newmes 1)
                (<= newmes 12) 
                )
-          (crearfecha (getdia fecha) newmes (getanho fecha))
+          (date (getdia fecha) newmes (getanho fecha))
           fecha)
       null
       )
@@ -86,7 +86,7 @@
 (define (setanho fecha newanho)
   (if (isfecha? fecha)
       (if (= newanho 2021) 
-          (crearfecha (getdia fecha) (getmes fecha) newanho)
+          (date (getdia fecha) (getmes fecha) newanho)
           fecha)
       null
       )
@@ -94,5 +94,7 @@
 
 
 
-(define fecha1 (crearfecha 20 03 2021))
-(setdia fecha1 19)
+;(define fecha1 (date 20 03 2021))
+;(setdia fecha1 19)
+
+(provide (all-defined-out))
