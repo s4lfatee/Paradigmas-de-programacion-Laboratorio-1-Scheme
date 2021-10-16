@@ -20,8 +20,76 @@
   (list name date encryptFn decryptFn '() '())
   )
 
+;Nivel 2: Pertenencia
+;Función que verifica el TDA ParadigmaDocs
+;Dominio:
+;Recorrido:
+;Recursión: No
+
+(define (isparadigmadocs? paradigmadocs)
+  (if (and (and (= (length paradigmadocs) 6)
+                (list? paradigmadocs)))
+      #t
+      #f
+      )
+  )
+
+;Nivel 3: Selectores
+;Funciones que permiten obtener elementos de la lista por si solos
+;Dominio:
+;Recorrido:
+;Recursión:
+
+(define (getplatformname paradigmadocs)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 0)
+      null
+      )
+  )
+
+(define (getparadigmadate paradigmadocs)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 1)
+      null
+      )
+  )
+
 (define (getlistausers paradigmadocs)
-  (list-ref paradigmadocs 4)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 4)
+      null
+      )
+  )
+
+(define (getlistadocs paradigmadocs)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 5)
+      null
+      )
+  )
+
+;Nivel 4: Modificadores
+;Funciones que modificarán los elementos de la lista
+;Dominio:
+;Recorrido:
+;Recursión:
+
+(define (setplatformname paradigmadocs platformname)
+  (list platformname
+        (list-ref paradigmadocs 1)
+        (list-ref paradigmadocs 2)
+        (list-ref paradigmadocs 3)
+        (list-ref paradigmadocs 4)
+        (list-ref paradigmadocs 5))
+  )
+
+(define (setdate paradigmadocs newdate)
+  (list (list-ref paradigmadocs 0)
+        newdate
+        (list-ref paradigmadocs 2)
+        (list-ref paradigmadocs 3)
+        (list-ref paradigmadocs 4)
+        (list-ref paradigmadocs 5))
   )
 
 (define (setlistausers paradigmadocs listausuarios)
@@ -32,6 +100,11 @@
         listausuarios
         (list-ref paradigmadocs 5))
   )
+
+;Nivel 5:
+;Dominio:
+;Recorrido:
+;Recursión
 
 (define (alreadyregistered? listausuarios user)
   (if (eq? null listausuarios)
@@ -50,17 +123,8 @@
       )
   )
 
-(define (login paradigmadocs username password operation)
-  (
-
-
-  
+;(define (login paradigmadocs username password operation)
+ ; (
   
 
-(define emptyGDocs (paradigmadocs "gDocs" (date 25 10 2021) encryptFn encryptFn))
-
-(define gDocs1
-(register (register (register emptyGDocs (date 25 10 2021) "user1" "pass1") (date 25 10 2021) "user1" "pass2") (date 25 10 2021) "user3" "pass3"))
-
-
-
+(provide (all-defined-out))

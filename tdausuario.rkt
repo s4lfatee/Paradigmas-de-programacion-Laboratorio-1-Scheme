@@ -54,7 +54,7 @@
   )
 
 ;Nivel 4: Modificadores
-;Funciones que modificarán los elementos de la lista dependiendo de la función
+;Funciones que modificarán los elementos de la lista
 ;Dominio: Lista
 ;Recorrido: Lista
 

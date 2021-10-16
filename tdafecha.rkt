@@ -92,9 +92,4 @@
       )
   )
 
-
-
-;(define fecha1 (date 20 03 2021))
-;(setdia fecha1 19)
-
 (provide (all-defined-out))

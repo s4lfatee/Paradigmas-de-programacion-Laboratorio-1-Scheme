@@ -79,3 +79,5 @@
       (creardocumento (gettitulo documento) (getcreador documento) nuevocontenido (getusuarios documento) (getusuariosonline documento))
       documento)
   )
+
+(provide (all-defined-out))
