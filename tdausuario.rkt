@@ -32,7 +32,7 @@
 ;Dominio: Lista
 ;Recorrido: String
 
-(define (getnombre usuario)
+(define (getnombreuser usuario)
   (if (isusuario? usuario)
       (car usuario)
       null
@@ -66,7 +66,7 @@
 
 (define (setcontrasenha usuario nuevacontrasenha)
   (if (isusuario? usuario)
-      (user (getnombre usuario) nuevacontrasenha (getdate usuario))
+      (user (getnombreuser usuario) nuevacontrasenha (getdate usuario))
       usuario)
   )
 

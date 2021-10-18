@@ -10,8 +10,8 @@
 ;Recorrido: Lista
 ;Recursión: No
 
-(define (creardocumento titulo creador contenido usuarios usuariosonline)
-  (list titulo creador contenido usuarios usuariosonline))
+(define (documento titulo date contenido)
+  (list titulo date contenido))
 
 ;Nivel 2: Pertenencia
 ;Función que verifica que el documento tenga la cantidad de elementos especificados y que sea una lista
@@ -19,7 +19,7 @@
 ;Recorrido: Valor Booleano
 
 (define (isdocumento? documento)
-  (if (and (= (length documento) 5)
+  (if (and (= (length documento) 3)
            (list? documento))
       #t
       #f
@@ -33,51 +33,40 @@
 
 (define (gettitulo documento)
   (if (isdocumento? documento)
-      (car documento)
+      (list-ref documento 0)
       null
       )
   )
 
-(define (getcreador documento)
+(define (getdatedocument documento)
   (if (isdocumento? documento)
-      (car (cdr documento))
+      (list-ref documento 1)
       null
       )
   )
 
 (define (getcontenido documento)
   (if (isdocumento? documento)
-      (car (cdr (cdr documento)))
+      (list-ref documento 2)
       null
       )
   )
 
-(define (getusuarios documento)
-  (if (isdocumento? documento)
-      (car (cdr (cdr (cdr documento))))
-      null
-      )
-  )
-
-(define (getusuariosonline documento)
-  (if (isdocumento? documento)
-      (car (cdr (cdr (cdr (cdr documento)))))
-      null
-      )
-  )
 
 ;Nivel 4
 
 (define (settitulo documento nuevotitulo)
   (if (isdocumento? documento)
-      (creardocumento nuevotitulo (getcreador documento) (getcontenido documento) (getusuarios documento) (getusuariosonline documento))
+      (documento nuevotitulo (getdatedocument documento) (getcontenido documento))
       documento)
   )
 
 (define (setcontenido documento nuevocontenido)
   (if (isdocumento? documento)
-      (creardocumento (gettitulo documento) (getcreador documento) nuevocontenido (getusuarios documento) (getusuariosonline documento))
+      (documento (gettitulo documento) (getdatedocument documento) nuevocontenido)
       documento)
   )
+
+
 
 (provide (all-defined-out))
