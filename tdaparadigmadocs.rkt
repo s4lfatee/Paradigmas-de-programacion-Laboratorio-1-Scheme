@@ -27,8 +27,7 @@
 ;Recursión: No
 
 (define (isparadigmadocs? paradigmadocs)
-  (if (and (and (= (length paradigmadocs) 7)
-                (list? paradigmadocs)))
+  (if (list? paradigmadocs)
       #t
       #f
       )
@@ -41,33 +40,53 @@
 ;Recursión:
 
 (define (getplatformname paradigmadocs)
-  (list-ref paradigmadocs 0)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 0)
+      null
+  )
   )
 
 (define (getparadigmadate paradigmadocs)
-  (list-ref paradigmadocs 1)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 1)
+      null
+  )
   )
 
 (define (getencryptfn paradigmadocs)
-  (list-ref paradigmadocs 2)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 2)
+      null
+  )
   )
 
 (define (getdecryptfn paradigmadocs)
-  (list-ref paradigmadocs 3)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 3)
+      null
+  )
   )
 
 (define (getlistausers paradigmadocs)
-  (list-ref paradigmadocs 4)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 4)
+      null
+  )
   )
 
 (define (getlistadocs paradigmadocs)
-  (list-ref paradigmadocs 5)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 5)
+      null
+  )
   )
 
 (define (getestado paradigmadocs)
-  (list-ref paradigmadocs 6)
+  (if (isparadigmadocs? paradigmadocs)
+      (list-ref paradigmadocs 6)
+      null
   )
- 
+  )
 
 ;Nivel 4: Modificadores
 ;Funciones que modificarán los elementos de la lista
@@ -77,108 +96,52 @@
 
 (define (setplatformname paradigmadocs platformname)
   (list platformname
-        (list-ref paradigmadocs 1)
-        (list-ref paradigmadocs 2)
-        (list-ref paradigmadocs 3)
-        (list-ref paradigmadocs 4)
-        (list-ref paradigmadocs 5))
+        (getparadigmadate paradigmadocs)
+        (getencryptfn paradigmadocs)
+        (getdecryptfn paradigmadocs)
+        (getlistausers paradigmadocs)
+        (getlistadocs paradigmadocs)
+        (getestado paradigmadocs))
   )
 
 (define (setdate paradigmadocs newdate)
-  (list (list-ref paradigmadocs 0)
+  (list (getplatformname paradigmadocs)
         newdate
-        (list-ref paradigmadocs 2)
-        (list-ref paradigmadocs 3)
-        (list-ref paradigmadocs 4)
-        (list-ref paradigmadocs 5)
-        (list-ref paradigmadocs 6))
+        (getencryptfn paradigmadocs)
+        (getdecryptfn paradigmadocs)
+        (getlistausers paradigmadocs)
+        (getlistadocs paradigmadocs)
+        (getestado paradigmadocs))
   )
 
 (define (setlistausers paradigmadocs listausuarios)
-  (list (list-ref paradigmadocs 0)
-        (list-ref paradigmadocs 1)
-        (list-ref paradigmadocs 2)
-        (list-ref paradigmadocs 3)
+  (list (getplatformname paradigmadocs)
+        (getparadigmadate paradigmadocs)
+        (getencryptfn paradigmadocs)
+        (getdecryptfn paradigmadocs)
         listausuarios
-        (list-ref paradigmadocs 5)
-        (list-ref paradigmadocs 6))
+        (getlistadocs paradigmadocs)
+        (getestado paradigmadocs))
   )
 
 (define (setlistadocumentos paradigmadocs listadocumentos)
-  (list (list-ref paradigmadocs 0)
-        (list-ref paradigmadocs 1)
-        (list-ref paradigmadocs 2)
-        (list-ref paradigmadocs 3)
-        (list-ref paradigmadocs 4)
+  (list (getplatformname paradigmadocs)
+        (getparadigmadate paradigmadocs)
+        (getencryptfn paradigmadocs)
+        (getdecryptfn paradigmadocs)
+        (getlistausers paradigmadocs)
         listadocumentos
-        (list-ref paradigmadocs 6))
+        (getestado paradigmadocs))
   )
 
 (define (setestado paradigmadocs nuevoestado)
-  (list (list-ref paradigmadocs 0)
-        (list-ref paradigmadocs 1)
-        (list-ref paradigmadocs 2)
-        (list-ref paradigmadocs 3)
-        (list-ref paradigmadocs 4)
-        (list-ref paradigmadocs 5)
-        nuevoestado
-        )
+  (list (getplatformname paradigmadocs)
+        (getparadigmadate paradigmadocs)
+        (getencryptfn paradigmadocs)
+        (getdecryptfn paradigmadocs)
+        (getlistausers paradigmadocs)
+        (getlistadocs paradigmadocs)
+        nuevoestado)
   )
-
-;Nivel 5:
-;Dominio:
-;Recorrido:
-;Recursión
-
-(define (alreadyregistered? listausuarios user)
-  (if (eq? null listausuarios)
-      #f
-      (if (string=? (getnombreuser (car listausuarios)) (getnombreuser user))
-          #t
-          (alreadyregistered? (cdr listausuarios) user)
-      )
-  )
-  )
-
-(define (is-in-list lista value)
- (cond
-  [(empty? lista) false]
-  [(eq? (first lista) value) true]
-  [else (is-in-list (rest lista) value)]))
-
-(define (register paradigmadocs date username password)
-  (if (alreadyregistered? (getlistausers paradigmadocs) (user username password date))
-      paradigmadocs
-      (setlistausers paradigmadocs (cons (user username password date) (getlistausers paradigmadocs)))
-      )
-  )
-
-(define (buscarusuario listausuarios user password)
-  (if (eq? null listausuarios)
-      #f
-      (if (and (is-in-list (car listausuarios) user)
-               (is-in-list (car listausuarios) password))
-
-          #t
-          (buscarusuario (cdr listausuarios) user password)
-          )
-      )
-  )
-
-                        
-(define (login paradigmadocs username password operation)
-  (define logged (setestado paradigmadocs (cons (cons username (cons "connected" null)) (getestado paradigmadocs))))
-  (if (buscarusuario (getlistausers paradigmadocs) username password)
-      (cond
-        [(eq? operation create) (lambda (date nombre contenido)(operation logged date nombre contenido))])
-      operation
-      )
-  )
-
-(define (create paradigmadocs date nombre contenido)
-  (setestado (setlistadocumentos paradigmadocs (cons (documento nombre date contenido) (getlistadocs paradigmadocs))) null)
-  )
-
-
 
 (provide (all-defined-out))
