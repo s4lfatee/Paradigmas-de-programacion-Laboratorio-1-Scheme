@@ -17,7 +17,7 @@
       (setlistausers paradigmadocs (cons (user username password date) (getlistausers paradigmadocs)))
       (if (alreadyregistered? (getlistausers paradigmadocs) (user username password date))
           (setlistausers paradigmadocs (getlistausers paradigmadocs))
-          (setlistausers paradigmadocs (cons (user username password date) (getlistausers paradigmadocs)))
+          (setlistausers paradigmadocs (agregarusers (user username password date) (getlistausers paradigmadocs)))
           )
       )
   )
@@ -84,10 +84,8 @@
                (eq? (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))
                     (getuserlogueado (getestado paradigmadocs)))) (setestado (agregarcontenidoporid paradigmadocs contenidoTexto idDoc) null)]
           
-          [else paradigmadocs])
+          [else (setestado paradigmadocs null)])
         add)))
-
-
 
 ;Descripción: Función que permite al usuario revocar todos los accesos a sus documentos
 ;Dominio: paradigmadocs
