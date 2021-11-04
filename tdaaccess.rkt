@@ -1,54 +1,124 @@
 #lang racket
+(require "tdausuario.rkt")
+(require "tdaparadigmadocs.rkt")
 
-;TDA Access
-;Nivel 0: Representación
-;El TDA Access se compone de una lista que contiene el nombre del usuario y el tipo de acceso otorgado
 
 ;Nivel 1: Constructor
 
+;Descripción: Función constructora del tda access
+;Dominio: String X Character
+;Recorrido: access
+;Recursión: No
 (define (access user permiso)
   (list user permiso)
   )
 
-;Nivel 2: Pertenencia
-
-(define (isacceso? acceso)
-  (if (list? acceso)
-      #t
-      #f
-      )
-  )
 
 ;Nivel 3: Selectores
 
+;Descripción: Función que obtiene el usuario de un acceso
+;Dominio: acceso
+;Recorrido: String
+;Recursión: No
 (define (getuseraccess acceso)
-  (if (isacceso? acceso)
-      (list-ref acceso 0)
-      null
-      )
-  )
+  (list-ref acceso 0))
 
+;Descripción: Función que obtiene el permiso de un acceso
+;Dominio: acceso
+;Recorrido: Character
+;Recursión: No
 (define (getpermiso acceso)
-  (if (isacceso? acceso)
-      (list-ref acceso 1)
-      null
-      )
-  )
+  (list-ref acceso 1))
+
 
 ;Nivel 4: Modificadores
 
+;Descripción: Función que establece un nuevo usuario en un acceso
+;Dominio: acceso X String
+;Recorrido: acceso
+;Recursión: No
 (define (setuseraccess acceso newuseraccess)
-  (if (isacceso? acceso)
-      (acceso newuseraccess (getpermiso acceso))
-      acceso)
+      (acceso newuseraccess (getpermiso acceso)))
+
+;Descripción: Función que establece un nuevo permiso en un acceso
+;Dominio: acceso X Character
+;Recorrido: acceso
+;Recursión: No
+(define (setpermiso acceso newperm)
+  (acceso (getuseraccess acceso) newperm))
+
+      
+  
+;Nivel 5:
+
+;Descripción: Función auxiliar para obtener el username de un acceso
+;Dominio: listaaccess
+;Recorrido: String
+;Recursión: No
+(define (getallusers listaaccess)
+  (getuseraccess listaaccess))
+
+;Descripción: Función que aplica la función getallusers a todos los elementos de una lista de accesos
+;Dominio: listaaccess
+;Recorrido: listadeusers
+;Recursión: No
+(define (getalluserswithperms lista)
+  (map getallusers lista))
+
+;Descripción: Función que busca la existencia de usuarios con múltiples accesos
+;Dominio: listaaccess X user (String)
+;Recorrido: Boolean
+;Recursión: Recursión de cola
+(define (verificarexistenciauser lista valor)
+ (cond
+  [(empty? lista) false]
+  [(eq? (first lista) valor) true]
+  [else (verificarexistenciauser (rest lista) valor)]))
+
+;Descripción: Función que aplica la función getuseraccess a una lista de accesos
+;Dominio: procedure X listaccesos
+;Recorrido: listusers
+;Recursión: No
+(define (generateuserslist getuseraccess accesos)
+  (map getuseraccess accesos))
+
+;Descripción: Función que actualiza la lista de accesos de un documento en paradigmadocs
+;Dominio: listadocs X int X newlistaaccess
+;Recorrido: listadocs
+;Recursión: No
+(define (writevalidacceses lista id listanueva)
+  (list-set lista id listanueva))
+
+;Descripción: Función que une accesos con accesos validados
+;Dominio: listaccess X listvalidaccess
+;Recorrido: listaccess
+;Recursión: No
+(define (uniraccesos accesos accesosfiltrados)
+  (cons accesos accesosfiltrados))
+
+;Descripción: Función que valida los accesos verificando si existen
+;Dominio: listaccess X listausers
+;Recorrido: listaacess
+;Recursión: Recursión de cola al hacer uso de verificaraccesorepetido
+(define (overwriteaccess listaccess listausers)
+  (if (eq? listaccess null)
+      null
+      (if (verificarexistenciauser listausers (getuseraccess (car listaccess)))
+          (cdr listaccess)
+          (overwriteaccess (cdr listaccess) listausers)
+          )
+      )
   )
 
-(define (setpermiso acceso newperm)
-  (if (isacceso? acceso)
-      (acceso (getuseraccess acceso) newperm)
-      acceso)
-  )
-      
+;Descripción: Función que genera una lista de accesos con los accesos válidos
+;Dominio: paradigmadocs X listaccess X String
+;Recorrido: listaccess
+;Recursión: Recursión de cola al hacer uso de la función verificaraccesorepetido
+(define (removeaccess paradigmadocs listaccess owner)
+  (filter (lambda (perm)
+            (and (not (eqv? (getuseraccess perm) owner)) (verificarexistenciauser (map getnombreuser (getlistausers paradigmadocs)) (getuseraccess perm)))
+          )listaccess))
+
+
 
 (provide (all-defined-out))
-

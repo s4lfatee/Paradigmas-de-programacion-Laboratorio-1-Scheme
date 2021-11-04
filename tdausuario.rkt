@@ -5,70 +5,64 @@
 ;El TDA usuario se compone de una lista que incluye el nombre de usuario, su contraseña, documentos creados, documentos compartidos y documentos accesibles
 
 ;Nivel 1: Constructor
-;Todos los elementos anteriormente mencionados en el nivel 0, se almacenan en una lista
-;Dominio: String
-;Recorrido: Lista
-;Recursión: No
 
+;Descripción: Función que construye el tda usuario
+;Dominio: String X String X date
+;Recorrido: user
+;Recursión: No
 (define (user nombreusuario contrasenha date)
   (list nombreusuario contrasenha date)
   )
 
-;Nivel 2: Pertenencia
-;La única forma disponible por ahora para verificar el tda, es a través de su largo de lista, posiblemente después tenga otra solución al respecto
-;Dominio: Lista
-;Recorrido: Valor Booleano
-
-(define (isusuario? usuario)
-  (if (and (= (length usuario) 3)
-           (list? usuario))
-      #t
-      #f
-      )
-  )
 
 ;Nivel 3: Selectores
-;Funciones que permiten obtener elementos de la lista por si solos
-;Dominio: Lista
+
+;Descripción: Función que obtiene el nombre de un usuario
+;Dominio: user
 ;Recorrido: String
-
+;Recursión: No
 (define (getnombreuser usuario)
-  (if (isusuario? usuario)
-      (car usuario)
-      null
-      )
-  )
+      (car usuario))
 
+;Descripción: Función que obtiene la contraseña de un usuario
+;Dominio: user
+;Recorrido: String
+;Recursión: No
 (define (getcontrasenha usuario)
-  (if (isusuario? usuario)
-      (car (cdr usuario))
-      null
-      )
-  )
+      (car (cdr usuario)))
 
+;Descripción: Función que obtiene la fecha de creación de un usuario
+;Dominio: user
+;Recorrido: date
+;Recursión: No
 (define (getdate usuario)
-  (if (isusuario? usuario)
-      (car (cdr (cdr usuario)))
-      null
-      )
-  )
+      (car (cdr (cdr usuario))))
+
+
+;Descripción: Función que obtiene el primer usuario de la lista de accesos de paradigmadocs
+;Dominio: listausers
+;Recorrido: user
+;Recursión: No
+(define (primerusuario listausuario)
+  (car listausuario))
+
+
 
 ;Nivel 4: Modificadores
-;Funciones que modificarán los elementos de la lista
-;Dominio: Lista
-;Recorrido: Lista
 
+;Descripción: Función que establece un nuevo username a un usuario
+;Dominio: user X String
+;Recorrido: user
+;Recursión: No
 (define (setnombreusuario usuario nuevonombre)
-  (if (isusuario? usuario)
-      (user nuevonombre (getcontrasenha usuario) (getdate usuario))
-      usuario)
-  )
+      (user nuevonombre (getcontrasenha usuario) (getdate usuario)))
 
+;Descripción: Función que establece una nueva contraseña a un usuario
+;Dominio: user X String
+;Recorrido: user
+;Recursión: No
 (define (setcontrasenha usuario nuevacontrasenha)
-  (if (isusuario? usuario)
-      (user (getnombreuser usuario) nuevacontrasenha (getdate usuario))
-      usuario)
-  )
+      (user (getnombreuser usuario) nuevacontrasenha (getdate usuario)))
 
 
 (provide (all-defined-out))
