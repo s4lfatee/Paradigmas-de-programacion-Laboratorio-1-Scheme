@@ -44,4 +44,10 @@
   (list (getnombredocver vrs) nuevocontent (getnumeroversion vrs))
   )
 
+(define (setnumeroversion vrs nuevaversion)
+  (list (getnombredocver vrs) (getcontenidover vrs) nuevaversion))
+
+(define (incrementarnumeroversion vrs)
+  (setnumeroversion vrs (- (+ (getnumeroversion vrs) (length vrs)) 1)))
+
 (provide (all-defined-out))

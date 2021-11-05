@@ -11,7 +11,7 @@
 ;Descripción: Función que registra usuarios en paradigmadocs
 ;Dominio: paradigmadocs X date X String X String
 ;Recorrido: paradigmadocs
-;Recursión: Recursión natural?????????????????????????????
+;Recursión: Recursión de cola
 (define (register paradigmadocs date username password)
   (if (empty? (getlistausers paradigmadocs))
       (setlistausers paradigmadocs (cons (user username password date) (getlistausers paradigmadocs)))
@@ -21,6 +21,7 @@
           )
       )
   )
+
                   
 ;Descripción: Función que permite autenticar a un usuario registrado e inicia sesión, permitiendo la ejecución de comandos dentro de la plataforma
 ;Dominio: paradigmadocs X String X String X Function
@@ -41,10 +42,10 @@
 (define (create paradigmadocs)
   (lambda (date nombre contenido)
     (if (not (empty? (getestado paradigmadocs)))
-        (setestado (setlistadocumentos paradigmadocs
+        (desloguear (setlistadocumentos paradigmadocs
                                        (agregardocumento (documento nombre date ((getencryptfn paradigmadocs) contenido)
                                                                     (largolistadocs (getlistadocs paradigmadocs)) (getuserlogueado (getestado paradigmadocs)))
-                                                         (getlistadocs paradigmadocs))) null)
+                                                         (getlistadocs paradigmadocs))))
         create)))
 
 ;Descripción: Función que permite compartir un documento con otros usuarios
@@ -57,16 +58,16 @@
         (if (and (buscardocumento (getlistadocs paradigmadocs) idDoc) (eqv? (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) (getuserlogueado (getestado paradigmadocs))))
             (cond
               [(eq? null (getaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))
-               (setestado (setlistadocumentos paradigmadocs (writevalidacceses (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
+               (desloguear (setlistadocumentos paradigmadocs (writevalidacceses (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
                                                                                (setaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
-                                                                                              (removeaccess paradigmadocs (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))))) null)]
+                                                                                              (removeaccess paradigmadocs (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))))))]
         
-              [else (setestado (setlistadocumentos paradigmadocs (writevalidacceses (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
+              [else (desloguear (setlistadocumentos paradigmadocs (writevalidacceses (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
                                                                                     (setaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
                                                                                                    (uniraccesos (getprimeracceso (removeaccess paradigmadocs (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))))
                                                                                                                 (overwriteaccess (getaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))
                                                                                                                                  (generateuserslist getuseraccess (removeaccess paradigmadocs (createlistadeaccesos access accesses)
-                                                                                                                                                                                (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))))))))) null)])
+                                                                                                                                                                                (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))))))))))])
             paradigmadocs
             )
         share)))
@@ -82,10 +83,32 @@
         (cond
           [(or (verificaruserwithaccess (getalluserswithperms (getuserswithperms idDoc paradigmadocs)) (getuserlogueado (getestado paradigmadocs)))
                (eq? (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))
-                    (getuserlogueado (getestado paradigmadocs)))) (setestado (agregarcontenidoporid paradigmadocs contenidoTexto idDoc) null)]
+                    (getuserlogueado (getestado paradigmadocs)))) (desloguear (agregarcontenidoporid paradigmadocs contenidoTexto idDoc))]
           
-          [else (setestado paradigmadocs null)])
+          [else (desloguear paradigmadocs)])
         add)))
+
+
+;Descripción: Función que permite restaurar una version anterior de un documento
+;Dominio: paradigmadocs X int X int
+;Recorrido: paradigmadocs
+;Recursión: Recursión natural al usar buscardocumento
+(define (restoreVersion paradigmadocs)
+  (lambda (idDoc idVersion)
+    (if (not (empty? (getestado paradigmadocs)))
+        (if (and (and (buscardocumento (getlistadocs paradigmadocs) idDoc) (eq? (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) (getuserlogueado (getestado paradigmadocs)))) (<= idVersion (- (getlargoversiones (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))) 1)))
+            (desloguear
+             (setlistadocumentos paradigmadocs
+                                 (actualizardocumento (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
+                                                      (setversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
+                                                                        (agregarversionrestaurada (incrementarnumeroversion
+                                                                                                   (getversionid (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) idVersion))
+                                                                                                  (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))))))
+            (desloguear paradigmadocs)
+            )
+        restoreVersion)))
+
+
 
 ;Descripción: Función que permite al usuario revocar todos los accesos a sus documentos
 ;Dominio: paradigmadocs
@@ -124,10 +147,17 @@
 (define gDocs12 ((login gDocs10 "user1" "pass1" add) 0 (date 30 11 2021) "mas contenido en doc0"))
 (define gDocs13 ((login gDocs12 "user3" "pass3" add) 0 (date 30 11 2021) "mas contenido en doc0"))
 (define gDocs14 ((login gDocs13 "user3" "pass3" add) 3 (date 30 11 2021) "mas contenido en doc3"))
-(define gDocs15 ((login gDocs14 "user3" "pass3" add) 1 (date 30 11 2021) "mas contenido en doc1")) ; Un user sin permisos de escritura o comentar inteta añadir texto a un documento
+(define gDocs15 ((login gDocs14 "user1" "pass1" add) 0 (date 30 11 2021) "mas contenido todavia"))
+(define gDocs16 ((login gDocs15 "user3" "pass3" add) 1 (date 30 11 2021) "mas contenido en doc1")) ; Un user sin permisos de escritura o comentar inteta añadir texto a un documento
 (define gDocs1998 ((login gDocs13 "user3243" "pass1343" add) 0 (date 30 11 2021) "mas contenido en doc0")) ; Un user inexistente, no hay efectos
 
 ;Ejemplos de revokeAllAcceses: Tres ejemplos, uno de ellos corresponde a un error
-(define gDocs16 (login gDocs15 "user1" "pass1" revokeAllAccesses)) ; User 1 elimina todos los permisos de sus dos documentos
-(define gDocs17 (login gDocs16 "user3" "pass3" revokeAllAccesses)) ; User 3 elimina todos los permisos de sus documentos
+(define gDocs17 (login gDocs16 "user1" "pass1" revokeAllAccesses)) ; User 1 elimina todos los permisos de sus dos documentos
+(define gDocs18 (login gDocs17 "user3" "pass3" revokeAllAccesses)) ; User 3 elimina todos los permisos de sus documentos
 (define gDocs1997 (login gDocs17 "user232" "pass664" revokeAllAccesses)) ; Un user inexistente, no hay efectos
+
+;Ejemplos de restoreVersion: Cuatro ejemplos, tres de ellos corresponden a errores
+(define gDocs19 ((login gDocs18 "user1" "pass1" restoreVersion) 0 0)) ; User1 logra restaurar la versión 0 con éxito
+(define gDocs20 ((login gDocs19 "user2" "pass2" restoreVersion) 0 0)) ; un user que no es dueño de el documento, por ende no hay efecto
+(define gDocs21 ((login gDocs20 "user1" "pass1" restoreVersion) 0 5)) ; user dueño de su documento intenta restaurar una version inexistente
+(define gDocs1996 ((login gDocs21 "user3q2432" "pass1" restoreVersion) 0 0)) ; Un user inexistente, no hay efectos y se retorna procedure

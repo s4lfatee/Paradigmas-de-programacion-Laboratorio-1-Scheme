@@ -250,5 +250,12 @@
 (define (largolistadocs lista)
   (length lista))
 
+;Descripción: Función que desloguea al usuario conectado
+;Dominio: listaestado
+;Recorrido: listaestado
+;Recursión: No
+(define (desloguear estado)
+  (setestado estado null))
+
 
 (provide (all-defined-out))

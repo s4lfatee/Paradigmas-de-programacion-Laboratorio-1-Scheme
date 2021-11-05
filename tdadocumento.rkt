@@ -108,6 +108,13 @@
       (car (getversionesdocs documento))
       )
 
+(define (getversionid listaversiones id)
+  (list-ref listaversiones (- (-(length listaversiones) id) 1))
+  )
+
+(define (actualizarlistaversiones listaversiones idVer nuevalista)
+  (list-set listaversiones idVer nuevalista))
+
 ;Nivel 4: Modificadores
 
 ;Descripción: Función que establece un nuevo contenido a un documento
@@ -233,5 +240,26 @@
                                (eq? (getpermiso acceso) #\c)))
           (getaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)))
   )
+
+;Descripción: Función que actualiza el documento afecta restoreVersion
+;Dominio: listadocs X int x list
+;Recorrido: listadocs
+;Recursión: No
+(define (actualizardocumento listadocs idDoc listanueva)
+  (list-set listadocs idDoc listanueva))
+
+;Descripción: Función que agrega la versión que se necesita ser restaurada a la lista de versiones
+;Dominio: version X listaversiones
+;Recorrido: listaversiones
+;Recursión: No
+(define (agregarversionrestaurada nuevaversion listaversiones)
+  (append (list nuevaversion) listaversiones))
+
+;Descripción: Función que obtiene el largo de la lista de versiones de un documento
+;Dominio: listaversiones
+;Recorrido: int
+;Recursión: No
+(define (getlargoversiones listaversiones)
+  (length listaversiones))
 
 (provide (all-defined-out))
