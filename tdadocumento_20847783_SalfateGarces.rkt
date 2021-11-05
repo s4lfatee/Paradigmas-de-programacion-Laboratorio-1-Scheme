@@ -1,9 +1,9 @@
 #lang racket
 
-(require "tdadate.rkt")
-(require "tdaparadigmadocs.rkt")
-(require "tdaversion.rkt")
-(require "tdaaccess.rkt")
+(require "tdadate_20847783_SalfateGarces.rkt")
+(require "tdaparadigmadocs_20847783_SalfateGarces.rkt")
+(require "tdaversion_20847783_SalfateGarces.rkt")
+(require "tdaaccess_20847783_SalfateGarces.rkt")
 
 
 

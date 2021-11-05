@@ -1,7 +1,7 @@
 #lang racket
-(require "tdadate.rkt")
-(require "tdausuario.rkt")
-(require "encryptfunction.rkt")
+(require "tdadate_20847783_SalfateGarces.rkt")
+(require "tdausuario_20847783_SalfateGarces.rkt")
+(require "encryptfunction_20847783_SalfateGarces.rkt")
 
 
 ;TDA ParadigmaDocs

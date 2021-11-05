@@ -1,6 +1,6 @@
 #lang racket
-(require "tdausuario.rkt")
-(require "tdaparadigmadocs.rkt")
+(require "tdausuario_20847783_SalfateGarces.rkt")
+(require "tdaparadigmadocs_20847783_SalfateGarces.rkt")
 
 
 ;Nivel 1: Constructor

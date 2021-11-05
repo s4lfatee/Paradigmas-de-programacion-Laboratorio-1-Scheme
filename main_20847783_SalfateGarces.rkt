@@ -1,12 +1,12 @@
 #lang racket
 
-(require "tdaparadigmadocs.rkt")
-(require "tdadate.rkt")
-(require "tdausuario.rkt")
-(require "tdadocumento.rkt")
-(require "tdaaccess.rkt")
-(require "tdaversion.rkt")
-(require "encryptfunction.rkt")
+(require "tdaparadigmadocs_20847783_SalfateGarces.rkt")
+(require "tdadate_20847783_SalfateGarces.rkt")
+(require "tdausuario_20847783_SalfateGarces.rkt")
+(require "tdadocumento_20847783_SalfateGarces.rkt")
+(require "tdaaccess_20847783_SalfateGarces.rkt")
+(require "tdaversion_20847783_SalfateGarces.rkt")
+(require "encryptfunction_20847783_SalfateGarces.rkt")
 
 ;Descripción: Función que registra usuarios en paradigmadocs
 ;Dominio: paradigmadocs X date X String X String
