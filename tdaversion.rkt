@@ -44,9 +44,17 @@
   (list (getnombredocver vrs) nuevocontent (getnumeroversion vrs))
   )
 
+;Descripción: Función que establece un nuevo número de versión a una versión
+;Dominio: version X int
+;Recorrido: version
+;Recursión: No
 (define (setnumeroversion vrs nuevaversion)
   (list (getnombredocver vrs) (getcontenidover vrs) nuevaversion))
 
+;Descripción: Función que incrementa el número de versión a una versión dependiendo del largo de la lista de versiones
+;Dominio: version
+;Recorrido: version
+;Recursión: No
 (define (incrementarnumeroversion vrs)
   (setnumeroversion vrs (- (+ (getnumeroversion vrs) (length vrs)) 1)))
 
