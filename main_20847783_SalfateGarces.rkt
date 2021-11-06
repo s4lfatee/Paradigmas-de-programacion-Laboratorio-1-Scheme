@@ -133,7 +133,7 @@
 (define gDocs4 ((login gDocs3 "user3" "pass3" create) (date 30 08 2021) "doc3" "contenido doc3"))
 (define gDocs5 ((login gDocs4 "user1" "pass1" create) (date 30 08 2021) "doc4" "contenido doc4"))
 (define gDocs1000 ((login gDocs2 "user1" "pass4352" create) (date 30 08 2021) "doc23" "contenido doc1000")) ; User1 no coincide con su contraseña
-(define gDocs1001 ((login gDocs3 "user3243" "pass43928" create) (date 30 08 2021) "doc234233" "contenido doc1001")) ; User no existe
+(define gDocs1001 ((login gDocs3 "user3243" "pass43928" create) (date 30 08 2021) "doc234233" "contenido doc1001")) ; User no existe, se retorna operation
 
 ;Ejemplos de share: Se utiliza esta función cinco veces, con casos distintos, y dos errores
 (define gDocs6 ((login gDocs5 "user1" "pass1" share) 0 (access "user2" #\r)))
@@ -142,7 +142,7 @@
 (define gDocs9 ((login gDocs8 "user3" "pass3" share) 2 (access "user1"  #\w))) ; Usuario dueño de su documento concede accesos a otro usuario
 (define gDocs10 ((login gDocs9 "user1" "pass1" share) 3 (access "user3" #\w))) ; Un usuario dueño de dos documentos asigna accesos a un usuario en uno de sus documentos
 (define gDocs11 ((login gDocs10 "user1" "pass1" share) 45 (access "user2" #\c))) ; Usuario existente intenta modificar un documento que no existe, generando ningún cambio
-(define gDocs1999 ((login gDocs9 "user23123" "pass1" share) 0 (access "user3" #\c))) ; Un usuario inexistente, no sucede nada y se devuelve operation
+(define gDocs1999 ((login gDocs9 "user23123" "pass1" share) 0 (access "user3" #\c))) ; Un usuario inexistente, no sucede nada y se retorna operation
 
 ;Ejemplos de add: Cinco ejemplos, dos de ellos corresponden a errores
 (define gDocs12 ((login gDocs10 "user1" "pass1" add) 0 (date 30 11 2021) "mas contenido en doc0"))
@@ -150,15 +150,15 @@
 (define gDocs14 ((login gDocs13 "user3" "pass3" add) 3 (date 30 11 2021) "mas contenido en doc3"))
 (define gDocs15 ((login gDocs14 "user1" "pass1" add) 0 (date 30 11 2021) "mas contenido todavia"))
 (define gDocs16 ((login gDocs15 "user3" "pass3" add) 1 (date 30 11 2021) "mas contenido en doc1")) ; Un user sin permisos de escritura o comentar inteta añadir texto a un documento
-(define gDocs1998 ((login gDocs13 "user3243" "pass1343" add) 0 (date 30 11 2021) "mas contenido en doc0")) ; Un user inexistente, no hay efectos
+(define gDocs1998 ((login gDocs13 "user3243" "pass1343" add) 0 (date 30 11 2021) "mas contenido en doc0")) ; Un user inexistente, no hay efectos y se retorna operation
 
 ;Ejemplos de revokeAllAcceses: Tres ejemplos, uno de ellos corresponde a un error
 (define gDocs17 (login gDocs16 "user1" "pass1" revokeAllAccesses)) ; User 1 elimina todos los permisos de sus dos documentos
 (define gDocs18 (login gDocs17 "user3" "pass3" revokeAllAccesses)) ; User 3 elimina todos los permisos de sus documentos
-(define gDocs1997 (login gDocs17 "user232" "pass664" revokeAllAccesses)) ; Un user inexistente, no hay efectos
+(define gDocs1997 (login gDocs17 "user232" "pass664" revokeAllAccesses)) ; Un user inexistente, no hay efectos y se retorna operation
 
 ;Ejemplos de restoreVersion: Cuatro ejemplos, tres de ellos corresponden a errores
 (define gDocs19 ((login gDocs18 "user1" "pass1" restoreVersion) 0 0)) ; User1 logra restaurar la versión 0 con éxito
 (define gDocs20 ((login gDocs19 "user2" "pass2" restoreVersion) 0 0)) ; un user que no es dueño de el documento, por ende no hay efecto
 (define gDocs21 ((login gDocs20 "user1" "pass1" restoreVersion) 0 5)) ; user dueño de su documento intenta restaurar una version inexistente
-(define gDocs1996 ((login gDocs21 "user3q2432" "pass1" restoreVersion) 0 0)) ; Un user inexistente, no hay efectos y se retorna procedure
+(define gDocs1996 ((login gDocs21 "user3q2432" "pass1" restoreVersion) 0 0)) ; Un user inexistente, no hay efectos y se retorna operation
