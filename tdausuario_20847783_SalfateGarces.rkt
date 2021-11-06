@@ -1,8 +1,9 @@
 #lang racket
 
-;TDA Usuario
+;TDA USUARIO
 ;Nivel 0: Representación
-;El TDA usuario se compone de una lista que incluye el nombre de usuario, su contraseña, documentos creados, documentos compartidos y documentos accesibles
+;El TDA usuario se compone de una lista que incluye el nombre de usuario (string)
+;su contraseña (string) y una fecha de creación del usuario (date)
 
 ;Nivel 1: Constructor
 

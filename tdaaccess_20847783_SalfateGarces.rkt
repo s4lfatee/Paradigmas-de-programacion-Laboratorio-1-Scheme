@@ -2,6 +2,10 @@
 (require "tdausuario_20847783_SalfateGarces.rkt")
 (require "tdaparadigmadocs_20847783_SalfateGarces.rkt")
 
+;TDA ACCESS
+;Nivel 0: Representación
+;Este TDA que corresponde al TDA acceso tendrá una representación de una lista que contiene dos datos, el nombre del usuario en forma de string
+;que corresponde al acceso y un character que represente el tipo de acceso otorgado
 
 ;Nivel 1: Constructor
 
@@ -99,7 +103,7 @@
 ;Descripción: Función que valida los accesos verificando si existen
 ;Dominio: listaccess X listausers
 ;Recorrido: listaacess
-;Recursión: Recursión de cola al hacer uso de verificaraccesorepetido
+;Recursión: Recursión de cola al hacer uso de verificarexistenciauser
 (define (overwriteaccess listaccess listausers)
   (if (eq? listaccess null)
       null
@@ -113,7 +117,7 @@
 ;Descripción: Función que genera una lista de accesos con los accesos válidos
 ;Dominio: paradigmadocs X listaccess X String
 ;Recorrido: listaccess
-;Recursión: Recursión de cola al hacer uso de la función verificaraccesorepetido
+;Recursión: Recursión de cola al hacer uso de la función verificarexistenciauser
 (define (removeaccess paradigmadocs listaccess owner)
   (filter (lambda (perm)
             (and (not (eqv? (getuseraccess perm) owner)) (verificarexistenciauser (map getnombreuser (getlistausers paradigmadocs)) (getuseraccess perm)))

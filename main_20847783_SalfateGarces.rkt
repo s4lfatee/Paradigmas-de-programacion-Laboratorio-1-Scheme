@@ -11,7 +11,7 @@
 ;Descripción: Función que registra usuarios en paradigmadocs
 ;Dominio: paradigmadocs X date X String X String
 ;Recorrido: paradigmadocs
-;Recursión: Recursión de cola
+;Recursión: Recursión natural en la función agregarusers, la cual agrega usuarios a la lista de usuarios de paradigmadocs y recursión de cola en alreadyregistered? que verifica si un usuario ya está registrado
 (define (register paradigmadocs date username password)
   (if (empty? (getlistausers paradigmadocs))
       (setlistausers paradigmadocs (cons (user username password date) (getlistausers paradigmadocs)))
@@ -27,7 +27,7 @@
 ;Dominio: paradigmadocs X String X String X Function
 ;Recorrido: Function
 ;Recorrido final: paradigmadocs
-;Recursión: Recursión de cola al hacer uso de la función buscarusuario                        
+;Recursión: Recursión de cola al hacer uso de la función buscarusuario, la cual verifica si el usuario coincide con la contraseña                
 (define (login paradigmadocs username password operation)
   (if (buscarusuario (getlistausers paradigmadocs) username password)
       (operation (setestado paradigmadocs (agregaruserlogueado username (getestado paradigmadocs))))
@@ -51,7 +51,8 @@
 ;Descripción: Función que permite compartir un documento con otros usuarios
 ;Dominio: paradigmadocs X int X access List
 ;Recorrido: paradigmadocs
-;Recursión: Recursión de cola al hacer uso de removeaccess y overwriteaccess
+;Recursión: Recursión de cola al hacer uso de buscardocumento, que verifica si un documento existe,
+;y recursión de cola en removeaccess y overwriteaccess, ya que son dos funciones que incluyen la misma función recursiva (verificarexistenciauser del tda acceso) en sus definiciones
 (define (share paradigmadocs)
   (lambda (idDoc access . accesses)
     (if (not (empty? (getestado paradigmadocs)))
@@ -76,7 +77,7 @@
 ;Descripción: Función que permite añadir texto al final de la versión actual del documento
 ;Dominio: paradigmadocs X int X date X String
 ;Recorrido: paradigmadocs
-;Recursión: Recursión natural al usar verificaruserwithaccess
+;Recursión: Recursión de cola al usar verificaruserwithaccess, función que verifica si el usuario logueado tiene los accesos requeridos junto con getuserswithperms
 (define (add paradigmadocs)
   (lambda (idDoc fecha contenidoTexto)
     (if (not (empty? (getestado paradigmadocs)))
@@ -92,7 +93,7 @@
 ;Descripción: Función que permite restaurar una version anterior de un documento
 ;Dominio: paradigmadocs X int X int
 ;Recorrido: paradigmadocs
-;Recursión: Recursión natural al usar buscardocumento
+;Recursión: Recursión cola al usar buscardocumento, la cual verifica la existencia de un documento
 (define (restoreVersion paradigmadocs)
   (lambda (idDoc idVersion)
     (if (not (empty? (getestado paradigmadocs)))

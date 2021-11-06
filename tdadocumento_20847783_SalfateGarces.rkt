@@ -5,7 +5,12 @@
 (require "tdaversion_20847783_SalfateGarces.rkt")
 (require "tdaaccess_20847783_SalfateGarces.rkt")
 
-
+;TDA DOCUMENTO
+;Nivel 0: Representación
+;Este TDA corresponde a un documento, cuya representación consiste en una lista que contiene
+;un título (string), una fecha (date), contenido (string) un id (int), un dueño de documento y dos listas vacías representando
+;una lista donde se almacenan los accesos de un documento y otra lista donde se almacenan las versiones
+;ambos accesos y versiones corresponden a otro TDA aparte a este.
 
 ;Nivel 1: Constructor
 
@@ -122,7 +127,7 @@
 ;Recorrido: documento
 ;Recursión: No
 (define (setcontenidodocs documento nuevocontenido)
-      (documento (gettitulo documento) (getdatedocument documento) nuevocontenido (getid documento (getowner documento) (getaccesodocs documento) (getversionesdocs documento))))
+      (documento (gettitulo documento) (getdatedocument documento) nuevocontenido (getid documento) (getowner documento) (getaccesodocs documento) (getversionesdocs documento)))
 
 ;Descripción: Función que establece una nueva lista de accesos en un documento
 ;Dominio: documento X listadeaccesos
@@ -201,7 +206,7 @@
 ;Descripción: Función que agrega un nuevo contenido y una nueva versión a un documento
 ;Dominio: paradigmadocs X String X date X int
 ;Recorrido: documento
-;Recursión: Recursión de cola al hacer uso de la función verificardocumentoid
+;Recursión: Recursión de cola al hacer uso de la función verificardocumentoid, la cual verifica si un documento coincide con el id entregado
 (define (agregarcontenido paradigmadocs newcontent id)
   (if (verificardocumentoid (getdocumentoparadigma (getlistadocs paradigmadocs) id) id)
       (if (null? (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)))
@@ -223,7 +228,7 @@
 ;Descripción: Función que actualiza la lista de documento tras hacer uso de la función add
 ;Dominio: paradigmadocs X String X date X int
 ;Recorrido: paradigmadocs
-;Recursión: Recursión de cola al utilizar la función verificardocumentoid
+;Recursión: Recursión de cola al utilizar la función verificardocumentoid, la cual verifica si un documento coincide con el id entregado
 (define (agregarcontenidoporid paradigmadocs newcontent id)
   (list-set paradigmadocs 5 (map (lambda (docs)
          (if (verificardocumentoid (getdocumentoparadigma (getlistadocs paradigmadocs) (getid docs)) id)

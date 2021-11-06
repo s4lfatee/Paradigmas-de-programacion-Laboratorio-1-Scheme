@@ -1,5 +1,9 @@
 #lang racket
 
+;TDA VERSIÓN
+;Nivel 0: Representación
+;Este TDA versión es representado a través de una lista que contiene el nombre del documento que ha sido modificado (string)
+;el contenido resultante de la modificación (string), y un número que represente a la versión (int)
 
 ;Nivel 1: Constructor
 ;Descripción: Función constructora del TDA versión

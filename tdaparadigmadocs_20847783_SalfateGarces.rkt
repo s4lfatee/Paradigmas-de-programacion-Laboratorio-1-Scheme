@@ -4,10 +4,11 @@
 (require "encryptfunction_20847783_SalfateGarces.rkt")
 
 
-;TDA ParadigmaDocs
-
+;TDA PARADIGMADOCS
 ;Nivel 0: Representación
-;Este TDA representa el proyecto de laboratorio 1 de paradigma funcional, que contiene el nombre de la plataforma, una fecha, y dos funciones para encriptar y desencriptar el contenido
+;Este TDA representa el proyecto de laboratorio 1 de paradigma funcional
+;que contiene el nombre de la plataforma (string), una fecha (date),
+;y dos funciones para encriptar y desencriptar contenido.
 
 ;Nivel 1: Constructor
 ;Función que construye el TDA ParadigmaDocs
@@ -177,9 +178,11 @@
 ;Descripción: Función que agrega un usuario a la lista de usuarios de un paradigmadocs
 ;Dominio: user X listausers
 ;Recorrido: listausers
-;Recursión: No
+;Recursión: Recursión natural
 (define (agregarusers usuario lista)
-  (cons usuario lista)
+  (if (null? lista)
+      (list usuario)
+      (append (list (car lista)) (agregarusers usuario (cdr lista))))
   )
 
 ;Descripción: Función que verifica la existencia de un elemento en una lista

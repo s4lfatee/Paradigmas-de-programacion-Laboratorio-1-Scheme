@@ -1,8 +1,8 @@
 #lang racket
 
-;TDA FECHA
+;TDA DATE
 ;Nivel 0: Representación
-;Este TDA representa una fecha, con un día, mes y año, y estos elementos se colocan dentro de una lista en el orden respectivo
+;Este TDA representa una lista con tres números enteros un día, mes y año, representando así una fecha
 
 ;Nivel 1: Constructor
 ;Función que construye el tda date
