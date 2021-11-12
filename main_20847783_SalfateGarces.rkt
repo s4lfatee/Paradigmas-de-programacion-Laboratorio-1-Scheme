@@ -61,13 +61,13 @@
               [(eq? null (getaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))
                (desloguear (setlistadocumentos paradigmadocs (writevalidacceses (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
                                                                                (setaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
-                                                                                              (removeaccess paradigmadocs (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))))))]
+                                                                                              (removeaccess (getlistausers paradigmadocs) (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))))))]
         
               [else (desloguear (setlistadocumentos paradigmadocs (writevalidacceses (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
                                                                                     (setaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
-                                                                                                   (uniraccesos (getprimeracceso (removeaccess paradigmadocs (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))))
+                                                                                                   (uniraccesos (getprimeracceso (removeaccess (getlistausers paradigmadocs) (createlistadeaccesos access accesses) (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))))
                                                                                                                 (overwriteaccess (getaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))
-                                                                                                                                 (generateuserslist getuseraccess (removeaccess paradigmadocs (createlistadeaccesos access accesses)
+                                                                                                                                 (generateuserslist getuseraccess (removeaccess (getlistausers paradigmadocs) (createlistadeaccesos access accesses)
                                                                                                                                                                                 (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))))))))))])
             paradigmadocs
             )
@@ -82,9 +82,9 @@
   (lambda (idDoc fecha contenidoTexto)
     (if (not (empty? (getestado paradigmadocs)))
         (cond
-          [(or (verificaruserwithaccess (getalluserswithperms (getuserswithperms idDoc paradigmadocs)) (getuserlogueado (getestado paradigmadocs)))
-               (eq? (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc))
-                    (getuserlogueado (getestado paradigmadocs)))) (desloguear (agregarcontenidoporid paradigmadocs contenidoTexto idDoc))]
+          [(or (verificaruserwithaccess (getalluserswithperms (getuserswithperms idDoc (getlistadocs paradigmadocs))) (getuserlogueado (getestado paradigmadocs)))
+               (eq? (getowner (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) (getuserlogueado (getestado paradigmadocs))))
+           (desloguear (actualizarlistadocs (agregarcontenidoporid (getlistadocs paradigmadocs) (getencryptfn paradigmadocs) (getdecryptfn paradigmadocs) contenidoTexto idDoc fecha) paradigmadocs))]
           
           [else (desloguear paradigmadocs)])
         add)))
@@ -101,10 +101,10 @@
             (desloguear
              (setlistadocumentos paradigmadocs
                                  (actualizardocumento (getlistadocs paradigmadocs) (- (- (largolistadocs (getlistadocs paradigmadocs)) idDoc) 1)
-                                                      (setversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
+                                                      (setcontenidodocs (setversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)
                                                                         (agregarversionrestaurada (incrementarnumeroversion
-                                                                                                   (getversionid (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) idVersion))
-                                                                                                  (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))))))
+                                                                                                   (getversionid (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) idVersion) (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))
+                                                                                                  (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)))) (getcontenidover (getversionid (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) idDoc)) idVersion))))))
             (desloguear paradigmadocs)
             )
         restoreVersion)))
@@ -120,6 +120,13 @@
       (setestado (setlistadocumentos paradigmadocs (deleteacceses (getlistadocs paradigmadocs) (getuserlogueado (getestado paradigmadocs)))) null)
       revokeAllAccesses))
 
+;Descripción: Función que recibe una plataforma de tipo paradigmadocs y entrega una representación del mismo como string
+;Dominio: paradigmadocs
+;Recorrido: String
+;Recursión: No
+(define (paradigmadocs->string paradigmadocs)
+  (stringparadigmadocs paradigmadocs))
+
 ;Ejemplo de constructor de paradigmadocs: Se crea un paradigmadocs con el nombre "gDocs"
 (define emptyGDocs (paradigmadocs "gDocs" (date 25 10 2021) encryptFn encryptFn))
 
@@ -128,10 +135,10 @@
 (register (register (register (register emptyGDocs (date 25 10 2021) "user1" "pass1") (date 25 10 2021) "user2" "pass2") (date 25 10 2021) "user3" "pass3") (date 25 10 2021) "user1" "pass4"))
 
 ;Ejemplos de create: Se crean 4 documentos y dos ejemplos de error
-(define gDocs2 ((login gDocs1 "user1" "pass1" create) (date 30 08 2021) "doc1" "contenido doc1"))
-(define gDocs3 ((login gDocs2 "user2" "pass2" create) (date 30 08 2021) "doc2" "contenido doc2"))
-(define gDocs4 ((login gDocs3 "user3" "pass3" create) (date 30 08 2021) "doc3" "contenido doc3"))
-(define gDocs5 ((login gDocs4 "user1" "pass1" create) (date 30 08 2021) "doc4" "contenido doc4"))
+(define gDocs2 ((login gDocs1 "user1" "pass1" create) (date 30 10 2021) "doc1" "contenido doc1"))
+(define gDocs3 ((login gDocs2 "user2" "pass2" create) (date 30 10 2021) "doc2" "contenido doc2"))
+(define gDocs4 ((login gDocs3 "user3" "pass3" create) (date 30 10 2021) "doc3" "contenido doc3"))
+(define gDocs5 ((login gDocs4 "user1" "pass1" create) (date 30 10 2021) "doc4" "contenido doc4"))
 (define gDocs1000 ((login gDocs2 "user1" "pass4352" create) (date 30 08 2021) "doc23" "contenido doc1000")) ; User1 no coincide con su contraseña
 (define gDocs1001 ((login gDocs3 "user3243" "pass43928" create) (date 30 08 2021) "doc234233" "contenido doc1001")) ; User no existe, se retorna operation
 
@@ -162,3 +169,8 @@
 (define gDocs20 ((login gDocs19 "user2" "pass2" restoreVersion) 0 0)) ; un user que no es dueño de el documento, por ende no hay efecto
 (define gDocs21 ((login gDocs20 "user1" "pass1" restoreVersion) 0 5)) ; user dueño de su documento intenta restaurar una version inexistente
 (define gDocs1996 ((login gDocs21 "user3q2432" "pass1" restoreVersion) 0 0)) ; Un user inexistente, no hay efectos y se retorna operation
+
+;Ejemplos de paradigmadocs->string (para vizualizar ocupar la función display)
+(define gDocs22 (paradigmadocs->string gDocs19))
+(define gDocs23 (login gDocs19 "user1" "pass1" paradigmadocs->string))
+(define gDocs24 (login gDocs19 "user2" "pass2" paradigmadocs->string))

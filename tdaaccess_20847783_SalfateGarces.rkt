@@ -1,6 +1,5 @@
 #lang racket
 (require "tdausuario_20847783_SalfateGarces.rkt")
-(require "tdaparadigmadocs_20847783_SalfateGarces.rkt")
 
 ;TDA ACCESS
 ;Nivel 0: Representación
@@ -42,14 +41,14 @@
 ;Recorrido: acceso
 ;Recursión: No
 (define (setuseraccess acceso newuseraccess)
-      (acceso newuseraccess (getpermiso acceso)))
+  (acceso newuseraccess (getpermiso acceso)))
 
 ;Descripción: Función que establece un nuevo permiso en un acceso
 ;Dominio: acceso X Character
 ;Recorrido: acceso
 ;Recursión: No
 (define (setpermiso acceso newperm)
-  (acceso (getuseraccess acceso) newperm))
+  (list (getuseraccess acceso) newperm))
 
       
   
@@ -114,15 +113,35 @@
       )
   )
 
+
+
+;Descripción: Función que transforma la información de un acceso a un string que se puede comprender
+;Dominio: access
+;Recorrido: String
+;Recursión: No
+(define (accessestostringlist accesses)
+  (string-join (list "El usuario" (getuseraccess accesses) "posee el tipo de acceso de" (getpermiso (traduciracceso accesses)))))
+
+;Descripción: Función que interpreta el caracter que representa el permiso en un acceso en una palabra para facilitar su comprensión a través de display
+;Dominio: access
+;Recorrido: access
+;Recursión: No
+(define (traduciracceso acceso)
+  (cond
+    [(eqv? (getpermiso acceso) #\c) (setpermiso acceso "comentar")]
+    [(eqv? (getpermiso acceso) #\w) (setpermiso acceso "escritura")]
+    [(eqv? (getpermiso acceso) #\r) (setpermiso acceso "lectura")]
+    [else null]
+    )
+  )
+
 ;Descripción: Función que genera una lista de accesos con los accesos válidos
 ;Dominio: paradigmadocs X listaccess X String
 ;Recorrido: listaccess
 ;Recursión: Recursión de cola al hacer uso de la función verificarexistenciauser
-(define (removeaccess paradigmadocs listaccess owner)
+(define (removeaccess listausers listaccess owner)
   (filter (lambda (perm)
-            (and (not (eqv? (getuseraccess perm) owner)) (verificarexistenciauser (map getnombreuser (getlistausers paradigmadocs)) (getuseraccess perm)))
+            (and (not (eqv? (getuseraccess perm) owner)) (verificarexistenciauser (map getnombreuser listausers) (getuseraccess perm)))
           )listaccess))
-
-
 
 (provide (all-defined-out))

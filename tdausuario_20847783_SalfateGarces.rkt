@@ -47,6 +47,13 @@
 (define (primerusuario listausuario)
   (car listausuario))
 
+;Descripción: Función que obtiene un user tras ser utilizado en una función de tipo filter lambda (Donde es necesario aplicar un car debido a que se crean listas involuntariamente)
+;Dominio: lista
+;Recorrido: user
+;Recursión: No
+(define (getinfouser user)
+  (car user))
+
 
 
 ;Nivel 4: Modificadores
@@ -64,6 +71,15 @@
 ;Recursión: No
 (define (setcontrasenha usuario nuevacontrasenha)
       (user (getnombreuser usuario) nuevacontrasenha (getdate usuario)))
+
+;Nivel 5
+
+;Descripción: Función que transforma la información de un usuario a un string que se puede comprender a través de display
+;Dominio: user
+;Recorrido: String
+;Recursión: No
+(define (usertostring user)
+  (string-join (list "Nombre de usuario:" (getnombreuser user) "\n" "Contraseña:" (getcontrasenha user) "\n" "Fecha de creación de la cuenta:" (string-join (map number->string (getdate user))) "\n------------------------\n")))
 
 
 (provide (all-defined-out))

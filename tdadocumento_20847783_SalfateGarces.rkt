@@ -1,9 +1,10 @@
 #lang racket
 
 (require "tdadate_20847783_SalfateGarces.rkt")
-(require "tdaparadigmadocs_20847783_SalfateGarces.rkt")
 (require "tdaversion_20847783_SalfateGarces.rkt")
 (require "tdaaccess_20847783_SalfateGarces.rkt")
+(require "encryptfunction_20847783_SalfateGarces.rkt")
+
 
 ;TDA DOCUMENTO
 ;Nivel 0: Representación
@@ -81,10 +82,7 @@
 ;Recorrido: listaaccess
 ;Recursión: No
 (define (getaccesodocs documento)
-  (if (isdocumento? documento)
       (list-ref documento 5)
-      null
-      )
   )
 
 ;Descripción: Función que obtiene la lista de versiones de un documento
@@ -94,31 +92,39 @@
 (define (getversionesdocs documento)
       (list-ref documento 6))
 
-;Nivel 4
-
-;Descripción: Función que obtiene un documento de la lista de documentos a través de un ID
-;Dominio: listadocs X int
-;Recorrido: documento
-;Recursión: No
-(define (getdocumentoparadigma listadocs id)
-  (list-ref listadocs (- (-(length listadocs) id) 1))
-  )
 
 ;Descripción: Función que obtiene la última versión de un documento
 ;Dominio: documento
 ;Recorrido: version
 ;Recursión: No
-
 (define (lastversion documento)
       (car (getversionesdocs documento))
       )
 
-(define (getversionid listaversiones id)
-  (list-ref listaversiones (- (-(length listaversiones) id) 1))
-  )
+;Descripción: Función que obtiene el contenido de un documento dependiendo de su última versión
+;Dominio: documento
+;Recorrido: String
+;Recursión: No
+(define (getcontentlastversion documento)
+  (if (eq? null (getversionesdocs documento))
+      (getcontenido documento)
+      (getcontenidover (lastversion documento))))
 
-(define (actualizarlistaversiones listaversiones idVer nuevalista)
-  (list-set listaversiones idVer nuevalista))
+;Descripción: Función que obtiene todos los documentos de un usuario a partir de un nombre de usuario
+;Dominio: String X listadocs
+;Recorrido: listadocs
+;Recursión: No
+(define (finduserdocs username listadocs)
+  (filter (lambda (docs)
+            (eqv? (getowner docs) username)) listadocs))
+
+;Descripción: Función que obtiene documentos donde un usuario en especifico tiene accesos a partir de un username
+;Dominio: String X listadocs
+;Recorrido: listadocs
+;Recursión: No
+(define (finduserdocsaccess username listadocs)
+  (filter (lambda (docs)
+            (verificaraccessuser (map getuseraccess (getaccesodocs docs)) username)) listadocs))
 
 ;Nivel 4: Modificadores
 
@@ -127,7 +133,7 @@
 ;Recorrido: documento
 ;Recursión: No
 (define (setcontenidodocs documento nuevocontenido)
-      (documento (gettitulo documento) (getdatedocument documento) nuevocontenido (getid documento) (getowner documento) (getaccesodocs documento) (getversionesdocs documento)))
+      (list (gettitulo documento) (getdatedocument documento) nuevocontenido (getid documento) (getowner documento) (getaccesodocs documento) (getversionesdocs documento)))
 
 ;Descripción: Función que establece una nueva lista de accesos en un documento
 ;Dominio: documento X listadeaccesos
@@ -149,7 +155,7 @@
 
 ;Nivel 5
 
-;Descripción: Función que verifica la existencia de un acceso en un documento
+;Descripción: Función que verifica la existencia de un acceso en la lista de accesos de un documento
 ;Dominio: listaaccesos X username (String)
 ;Recorrido: Boolean
 ;Recursión: Recursión de cola
@@ -158,6 +164,16 @@
   [(empty? lista) false]
   [(eq? (first lista) valor) true]
   [else (verificaraccessuser (rest lista) valor)]))
+
+;Descripción: Función que verifica la existencia de un documento a través de su ID
+;Dominio: listadocs X int
+;Recorrido: Boolean
+;Recursión: Recursión de cola
+(define (verificardocumentoid lista id)
+ (cond
+  [(empty? lista) false]
+  [(eq? (first lista) id) true]
+  [else (verificardocumentoid (rest lista) id)]))
 
 ;Descripción: Función que genera una lista con todos los accesos
 ;Dominio: access X accesses (lista)
@@ -173,15 +189,7 @@
 (define (getprimeracceso listaccesos)
   (car listaccesos))
 
-;Descripción: Función que verifica la existencia de un documento a través de su ID
-;Dominio: listadocs X int
-;Recorrido: Boolean
-;Recursión: Recursión de cola
-(define (verificardocumentoid lista id)
- (cond
-  [(empty? lista) false]
-  [(eq? (first lista) id) true]
-  [else (verificardocumentoid (rest lista) id)]))
+
 
 ;Descripción: Función que verifica la existencia de un usuario de una lista de accesos
 ;Dominio: listaccess X username (String)
@@ -203,47 +211,33 @@
              (setaccesodocs documento null)
              documento)) docs))
 
-;Descripción: Función que agrega un nuevo contenido y una nueva versión a un documento
-;Dominio: paradigmadocs X String X date X int
+;Descripción: Función que obtiene un documento de la lista de documentos a través de un ID
+;Dominio: listadocs X int
 ;Recorrido: documento
-;Recursión: Recursión de cola al hacer uso de la función verificardocumentoid, la cual verifica si un documento coincide con el id entregado
-(define (agregarcontenido paradigmadocs newcontent id)
-  (if (verificardocumentoid (getdocumentoparadigma (getlistadocs paradigmadocs) id) id)
-      (if (null? (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)))
-          (setversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)
-                            (list (version (gettitulo (getdocumentoparadigma (getlistadocs paradigmadocs) id)) ((getencryptfn paradigmadocs)
-                                                                                                                     (string-append ((getdecryptfn paradigmadocs)
-                                                                                                                                     (getcontenido (getdocumentoparadigma (getlistadocs paradigmadocs) id))) newcontent)) 0)))
-          (setversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)
-                            (cons (version (gettitulo (getdocumentoparadigma (getlistadocs paradigmadocs) id))
-                                           ((getencryptfn paradigmadocs) (string-append ((getdecryptfn paradigmadocs) (getcontenidover (lastversion (getdocumentoparadigma (getlistadocs paradigmadocs) id)))) newcontent))
-                                           (+ (getnumeroversion (lastversion (getdocumentoparadigma (getlistadocs paradigmadocs) id))) 1))
-                                  (getversionesdocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)))
-                            )
-          )
-      paradigmadocs
-      )
+;Recursión: No
+(define (getdocumentoparadigma listadocs id)
+  (list-ref listadocs (- (-(length listadocs) id) 1))
   )
 
 ;Descripción: Función que actualiza la lista de documento tras hacer uso de la función add
 ;Dominio: paradigmadocs X String X date X int
 ;Recorrido: paradigmadocs
 ;Recursión: Recursión de cola al utilizar la función verificardocumentoid, la cual verifica si un documento coincide con el id entregado
-(define (agregarcontenidoporid paradigmadocs newcontent id)
-  (list-set paradigmadocs 5 (map (lambda (docs)
-         (if (verificardocumentoid (getdocumentoparadigma (getlistadocs paradigmadocs) (getid docs)) id)
-             (agregarcontenido paradigmadocs newcontent (getid docs))
+(define (agregarcontenidoporid listdocs encryptfn decryptfn newcontent id fecha)
+  (map (lambda (docs)
+         (if (verificardocumentoid (getdocumentoparadigma listdocs (getid docs)) id)
+             (agregarcontenido listdocs encryptfn decryptfn newcontent (getid docs) fecha)
              docs
-             )) (getlistadocs paradigmadocs))))
+             )) listdocs))
 
 ;Descripción: Función que genera una nueva lista con usuarios que tengan permisos de escritura y de comentarios
 ;Dominio: int X paradigmadocs
 ;Recorrido: listaaccesos
 ;Recursión: No
-(define (getuserswithperms id paradigmadocs)
+(define (getuserswithperms id listadocs)
   (filter (lambda (acceso) (or (eq? (getpermiso acceso) #\w)
                                (eq? (getpermiso acceso) #\c)))
-          (getaccesodocs (getdocumentoparadigma (getlistadocs paradigmadocs) id)))
+          (getaccesodocs (getdocumentoparadigma listadocs id)))
   )
 
 ;Descripción: Función que actualiza el documento afecta restoreVersion
@@ -266,5 +260,35 @@
 ;Recursión: No
 (define (getlargoversiones listaversiones)
   (length listaversiones))
+
+;Descripción: Función que transforma la información de un documento a un string que un usuario pueda comprender a través de display
+;Dominio: documento
+;Recorrido: String
+;Recursión: No
+(define (documentstringlist documento)
+  (string-join (list "Nombre de documento:" (gettitulo documento) "\n" "Fecha de creación de documento:" (string-join (map number->string (getdatedocument documento)))"\n""Contenido del documento:" (encryptFn (getcontentlastversion documento))"\n""ID del documento:" (number->string (getid documento))"\n""Dueño del documento:" (getowner documento)"\n" "Accesos del documento:" (string-join (map accessestostringlist (getaccesodocs documento))) "\n""Versiones del documento:\n" (string-join (map versionstringlist (getversionesdocs documento))) "\n------------------------\n\n")))
+
+;Descripción: Función que agrega un nuevo contenido y una nueva versión a un documento
+;Dominio: paradigmadocs X String X date X int
+;Recorrido: documento
+;Recursión: Recursión de cola al hacer uso de la función verificardocumentoid, la cual verifica si un documento coincide con el id entregado
+(define (agregarcontenido listdocs encryptfn decryptfn newcontent id fecha)
+  (if (verificardocumentoid (getdocumentoparadigma listdocs id) id)
+      (if (null? (getversionesdocs (getdocumentoparadigma listdocs id)))
+          (setcontenidodocs (setversionesdocs (getdocumentoparadigma listdocs id)
+                            (list (version (gettitulo (getdocumentoparadigma listdocs id)) fecha (encryptfn
+                                                                                                                     (string-append (decryptfn
+                                                                                                                                     (getcontenido (getdocumentoparadigma listdocs id))) newcontent)) 1)
+                                  (version (gettitulo (getdocumentoparadigma listdocs id)) (getdatedocument (getdocumentoparadigma listdocs id)) (getcontenido (getdocumentoparadigma listdocs id)) 0))) (encryptfn (string-append (decryptfn (getcontenido (getdocumentoparadigma listdocs id))) newcontent)))
+          (setcontenidodocs (setversionesdocs (getdocumentoparadigma listdocs id)
+                            (cons (version (gettitulo (getdocumentoparadigma listdocs id)) fecha
+                                           (encryptfn (string-append (decryptfn (getcontenidover (lastversion (getdocumentoparadigma listdocs id)))) newcontent))
+                                           (+ (getnumeroversion (lastversion (getdocumentoparadigma listdocs id))) 1))
+                                  (getversionesdocs (getdocumentoparadigma listdocs id)))
+                            ) (encryptfn (string-append (decryptfn (getcontenido (getdocumentoparadigma listdocs id))) newcontent)))
+          )
+      listdocs
+      )
+  )
 
 (provide (all-defined-out))

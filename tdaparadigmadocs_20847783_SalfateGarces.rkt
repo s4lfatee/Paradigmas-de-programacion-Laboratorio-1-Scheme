@@ -2,6 +2,7 @@
 (require "tdadate_20847783_SalfateGarces.rkt")
 (require "tdausuario_20847783_SalfateGarces.rkt")
 (require "encryptfunction_20847783_SalfateGarces.rkt")
+(require "tdadocumento_20847783_SalfateGarces.rkt")
 
 
 ;TDA PARADIGMADOCS
@@ -259,6 +260,45 @@
 ;Recursión: No
 (define (desloguear estado)
   (setestado estado null))
+
+;Descripción: Función que obtiene toda la información de un usuario a partir de un nombre de usuario
+;Dominio: String X listausers
+;Recorrido: listausers
+;Recursión: No
+(define (finduserinfo username listausers)
+  (filter (lambda (user)
+            (eqv? (getnombreuser user) username)) listausers))
+
+;Descripción: Función que actualiza la lista de documentos de paradigmadocs
+;Dominio: listadocs X paradigmadocs
+;Recorrido: paradigmadocs
+;Recursión: No
+(define (actualizarlistadocs listadocs paradigmadoc)
+  (list-set paradigmadoc 5 listadocs))
+
+;Descripción: Función que genera los strings dependiendo del uso de paradigmadocs->string
+;Dominio: paradigmadocs
+;Recorrido: String
+;Recursión: No
+(define (stringparadigmadocs paradigmadocs)
+  (if (not (empty? (getestado paradigmadocs)))
+      (string-join (list "Nombre de usuario:" (getuserlogueado (getestado paradigmadocs))"\n"
+            "Contraseña:" (getcontrasenha (getinfouser (finduserinfo (getuserlogueado (getestado paradigmadocs)) (getlistausers paradigmadocs))))"\n"
+            "Fecha de registro del usuario:" (string-join (map number->string (getdate (getinfouser (finduserinfo (getuserlogueado (getestado paradigmadocs)) (getlistausers paradigmadocs))))))"\n\n"
+            "Documentos propios:\n Tener en cuenta, cada versión de un documento se separa con una cadena //////////////\n\n" (string-join (map documentstringlist (finduserdocs (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))
+            "Documentos con acceso:\n\n" (string-join (map documentstringlist (finduserdocsaccess (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))))
+      
+      (string-join (list "Plataforma de documentos" (getplatformname paradigmadocs) "\n"
+                         (string-join (list "Fecha de creación de la plataforma" (string-join (map number->string (list 25 10 2021))) "\n"))
+                         "\n"
+                         "******USUARIOS****** \n"
+                         (string-join (map usertostring (getlistausers paradigmadocs)))
+                         "******FIN USUARIOS****** \n"
+                         "\n"
+                         "******DOCUMENTOS****** \n Tener en cuenta, cada versión de un documento se separa con una cadena //////////////\n\n"
+                         (string-join (map documentstringlist (getlistadocs paradigmadocs)))
+                         "******FIN DOCUMENTOS****** \n"
+                         ))))
 
 
 (provide (all-defined-out))
