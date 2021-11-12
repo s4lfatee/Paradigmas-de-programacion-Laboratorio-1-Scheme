@@ -289,7 +289,7 @@
             "Documentos con acceso:\n\n" (string-join (map documentstringlist (finduserdocsaccess (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))))
       
       (string-join (list "Plataforma de documentos" (getplatformname paradigmadocs) "\n"
-                         (string-join (list "Fecha de creación de la plataforma" (string-join (map number->string (list 25 10 2021))) "\n"))
+                         (string-join (list "Fecha de creación de la plataforma" (string-join (map number->string (getparadigmadate paradigmadocs))) "\n"))
                          "\n"
                          "******USUARIOS****** \n"
                          (string-join (map usertostring (getlistausers paradigmadocs)))
