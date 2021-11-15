@@ -9,7 +9,7 @@
 
 ;Nivel 1: Constructor
 ;Descripción: Función constructora del TDA versión
-;Dominio: String X String X int
+;Dominio: String X date X String X int
 ;Recorrido: version
 ;Recursión: No
 
