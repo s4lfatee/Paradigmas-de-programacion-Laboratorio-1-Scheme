@@ -128,7 +128,7 @@
   (stringparadigmadocs paradigmadocs))
 
 ;Ejemplo de constructor de paradigmadocs: Se crea un paradigmadocs con el nombre "gDocs"
-(define emptyGDocs (paradigmadocs "gDocs" (date 25 10 2021) encryptFn encryptFn))
+(define emptyGDocs (paradigmadocs "gDocs" (date 25 10 2021) encryptFunction encryptFunction))
 
 ;Ejemplos de register: Se registran cuatro usuarios, user1 se repite en el último registro, por ende, se omite
 (define gDocs1
@@ -174,3 +174,9 @@
 (define gDocs22 (paradigmadocs->string gDocs19))
 (define gDocs23 (login gDocs19 "user1" "pass1" paradigmadocs->string))
 (define gDocs24 (login gDocs19 "user2" "pass2" paradigmadocs->string))
+
+;Ejemplos de encryptFn creado por el estudiante, los primeros dos ejemplos corresponden a encriptación, y los otros corresponden a la desencriptación de estos.
+(define gDocs25 (encryptFn "contenido doc1"))
+(define gDocs26 (encryptFn "texto texto texto texto etc"))
+(define gDocs27 (decryptFn gDocs25))
+(define gDocs28 (decryptFn gDocs26))
