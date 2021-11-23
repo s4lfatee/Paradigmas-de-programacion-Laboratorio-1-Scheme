@@ -172,7 +172,7 @@
 
 ;Ejemplos de paradigmadocs->string (para vizualizar ocupar la función display)
 (define gDocs22 (paradigmadocs->string gDocs19))
-(define gDocs23 (login gDocs19 "user1" "pass1" paradigmadocs->string))
+(define gDocs23 (login gDocs16 "user1" "pass1" paradigmadocs->string))
 (define gDocs24 (login gDocs19 "user2" "pass2" paradigmadocs->string))
 
 ;Ejemplos de encryptFn creado por el estudiante, los primeros dos ejemplos corresponden a encriptación, y los otros corresponden a la desencriptación de estos.

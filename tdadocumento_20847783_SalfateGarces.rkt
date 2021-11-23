@@ -266,7 +266,7 @@
 ;Recorrido: String
 ;Recursión: No
 (define (documentstringlist documento)
-  (string-join (list "Nombre de documento:" (gettitulo documento) "\n" "Fecha de creación de documento:" (string-join (map number->string (getdatedocument documento)))"\n""Contenido del documento:" (encryptFn (getcontentlastversion documento))"\n""ID del documento:" (number->string (getid documento))"\n""Dueño del documento:" (getowner documento)"\n" "Accesos del documento:" (string-join (map accessestostringlist (getaccesodocs documento))) "\n""Versiones del documento:\n" (string-join (map versionstringlist (getversionesdocs documento))) "\n------------------------\n\n")))
+  (string-join (list "Nombre de documento:" (gettitulo documento) "\n" "Fecha de creación de documento:" (string-join (map number->string (getdatedocument documento)))"\n""Contenido del documento:" (encryptFunction (getcontentlastversion documento))"\n""ID del documento:" (number->string (getid documento))"\n""Dueño del documento:" (getowner documento)"\n" "Accesos del documento:" (string-join (map accessestostringlist (getaccesodocs documento))) "\n" "\n" "Versiones del documento:\n \n" (string-join (map versionstringlist (getversionesdocs documento))) "\n--------------------------------------\n\n")))
 
 ;Descripción: Función que agrega un nuevo contenido y una nueva versión a un documento
 ;Dominio: paradigmadocs X String X date X int

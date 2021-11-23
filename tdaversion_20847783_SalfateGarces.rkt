@@ -76,7 +76,7 @@
 ;Recorrido: String
 ;Recursión No
 (define (versionstringlist version)
-  (string-join (list "Nombre de documento:" (getnombredocver version) "Fecha de creación:" (string-join (map number->string (getfechaver version))) "Contenido de la versión:" (encryptFn (getcontenidover version)) "Número de versión:" (number->string (getnumeroversion version)) "\n//////////////\n")))
+  (string-join (list "Nombre de documento:" (getnombredocver version) "\n" "Fecha de creación:" (string-join (map number->string (getfechaver version))) "\n" "Contenido de la versión:" (encryptFunction (getcontenidover version)) "\n" "Número de versión:" (number->string (getnumeroversion version)) "\n//////////////\n")))
 
 ;Descripción: Función que actualiza la lista de versiones al hacer uso de restoreVersion
 ;Dominio: listaversions X int X listaversions

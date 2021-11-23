@@ -285,8 +285,8 @@
       (string-join (list "Nombre de usuario:" (getuserlogueado (getestado paradigmadocs))"\n"
             "Contraseña:" (getcontrasenha (getinfouser (finduserinfo (getuserlogueado (getestado paradigmadocs)) (getlistausers paradigmadocs))))"\n"
             "Fecha de registro del usuario:" (string-join (map number->string (getdate (getinfouser (finduserinfo (getuserlogueado (getestado paradigmadocs)) (getlistausers paradigmadocs))))))"\n\n"
-            "Documentos propios:\n Tener en cuenta, cada versión de un documento se separa con una cadena //////////////\n\n" (string-join (map documentstringlist (finduserdocs (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))
-            "Documentos con acceso:\n\n" (string-join (map documentstringlist (finduserdocsaccess (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))))
+            "*******Documentos propios:*******\n Tener en cuenta, cada versión de un documento se separa con una cadena //////////////\n\n" (string-join (map documentstringlist (finduserdocs (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))
+            "*******Documentos con acceso:*******\n\n" (string-join (map documentstringlist (finduserdocsaccess (getuserlogueado (getestado paradigmadocs)) (getlistadocs paradigmadocs))))))
       
       (string-join (list "Plataforma de documentos" (getplatformname paradigmadocs) "\n"
                          (string-join (list "Fecha de creación de la plataforma" (string-join (map number->string (getparadigmadate paradigmadocs))) "\n"))
