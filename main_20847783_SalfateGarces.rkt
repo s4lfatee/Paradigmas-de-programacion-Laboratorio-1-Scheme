@@ -14,7 +14,7 @@
 ;Recursión: Recursión natural en la función agregarusers, la cual agrega usuarios a la lista de usuarios de paradigmadocs y recursión de cola en alreadyregistered? que verifica si un usuario ya está registrado
 (define (register paradigmadocs date username password)
   (if (empty? (getlistausers paradigmadocs))
-      (setlistausers paradigmadocs (cons (user username password date) (getlistausers paradigmadocs)))
+      (setlistausers paradigmadocs (agregarusers (user username password date) (getlistausers paradigmadocs)))
       (if (alreadyregistered? (getlistausers paradigmadocs) (user username password date))
           (setlistausers paradigmadocs (getlistausers paradigmadocs))
           (setlistausers paradigmadocs (agregarusers (user username password date) (getlistausers paradigmadocs)))
